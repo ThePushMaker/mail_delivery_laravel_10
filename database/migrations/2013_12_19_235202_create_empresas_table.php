@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('empresas', function (Blueprint $table) {
             $table->id();
-            $table->string('razon_social');
+            $table->string('razon_social')->nullable();
             $table->string('rfc')->unique();
-            $table->string('metodo_generacion_empleados');
+            $table->string('metodo_generacion_empleados')->nullable();
             $table->string('imagen')->nullable();
             $table->timestamps();
         });
