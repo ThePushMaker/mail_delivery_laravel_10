@@ -9,6 +9,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -55,25 +56,12 @@ class RegisteredUserController extends Controller
         return redirect(RouteServiceProvider::HOME);
     }
     
-    public function UserUpdate(Request $request, User $user): RedirectResponse
+    public function empresaUpdate(Request $request, Empresa $empresa): RedirectResponse
     {
-        $request->validate([
-            'razon_social' => 'required|string|max:255',
-            'metodo_generacion_empleados' => 'required|string|max:255',
-            'imagen' => 'required|string|max:255',
-            'clave_empleado' => 'required|string|max:255',
-            'nombres' => 'required|string|max:255',
-            'ap_paterno' => 'required|string|max:255',
-            'ap_materno' => 'required|string|max:255',
-            'rfc' => 'required|string|max:255',
-            'tipo_sangre' => 'required|string|max:255',
-            'curp' => 'required|string|max:255',
-            'clabe_interbancaria' => 'required|string|max:255',
-            'banco' => 'required|string|max:255',
-            'sexo' => 'required|string|max:255',
-            'req_control_asistencias' => 'required|string|max:255',
-            'admin' => 'required|string|max:255',
-            'fecha_ingreso' => 'required|string|max:255',
+        $data = $request->validate([
+            'razon_social' => 'string|max:255',
+            'metodo_generacion_empleados' => 'string|max:255',
+            'imagen' => 'string|max:255',
         ]);
         
         // empresa
@@ -89,42 +77,35 @@ class RegisteredUserController extends Controller
         }else{
             return response([
                 'status' => false,
-                'msg'=>'Ocurrio un error al intentar actualizar la información'
+                'msg'=>'Ocurrio un error al intentar actualizar la información de la empresa'
             ]);
         }
         
+    }
+    
+    
+    public function setAdmin(Request $request, User $user)
+    {  
+        $data = $request->validate([
+        ]);
+     
         // usuario
-        $user->clave_empleado=$data['clave_empleado'];
-        $user->nombres=$data['nombres'];
-        $user->ap_paterno=$data['ap_paterno'];
-        $user->ap_materno=$data['ap_materno'];
-        $user->rfc=$data['rfc'];
-        $user->tipo_sangre=$data['tipo_sangre'];
-        $user->curp=$data['curp'];
-        $user->clabe_interbancaria=$data['clabe_interbancaria'];
-        $user->banco=$data['banco'];
-        $user->sexo=$data['sexo'];
-        $user->req_control_asistencias=$data['req_control_asistencias'];
-        $user->admin=$data['admin'];
-        $user->fecha_ingreso=$data['fecha_ingreso'];
+        $user->nombres = 'administrador';
+        $user->admin = '1';
+        $user->fecha_ingreso = Carbon::now()->format('Y-m-d H:i:s');
     
         if($user->save()){
             return response([
                 'status' => true,
-                '$user'=>$user
-            ]);
+                'user' => $user
+            ], 200);
         }else{
             return response([
                 'status' => false,
-                'msg'=>'Ocurrio un error al intentar actualizar la información'
-            ]);
+                'msg'=>'Ocurrio un error al intentar actualizar la información del usuario'
+            ], 400);
         }
     }
-    
-    // public function EmpresaUpdate(Request $request, Empresa $empresa): RedirectResponse
-    // {
-    //     return stringValue('hola');
-    // }
     
     
 }

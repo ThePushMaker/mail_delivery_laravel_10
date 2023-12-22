@@ -38,8 +38,44 @@ export default function RegisterPartTwo() {
         console.log(e);
         console.log('data',data);
 
-        post(route('register'));
+        // post(route('register'));
+
+        sendData(data);
     };
+    
+    const sendData = (data) => {
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Content-Type", "application/json");
+        // myHeaders.append("X-XSRF-TOKEN", "2|3e9pepIh05VFq29Kd0FnvhjUxHSEBpqz0CEFIsh9");
+        // myHeaders.append("Authorization", "Bearer 2|3e9pepIh05VFq29Kd0FnvhjUxHSEBpqz0CEFIsh9");
+
+        console.log(data.razon_social)
+        
+        
+        
+        var contenedor = {
+            data: data
+          };
+        
+        var raw = JSON.stringify(contenedor);
+        
+        console.log('raw');
+        console.log(raw);
+
+        
+        var requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        fetch("http://127.0.0.1:8000/api/user/1", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
 
     return (
         <GuestLayout>

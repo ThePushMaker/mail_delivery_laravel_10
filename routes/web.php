@@ -36,7 +36,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::post('/user/{user}', [RegisteredUserController::class, 'UserUpdate']);
-// Route::post('/empresa/{empresa}', [RegisteredUserController::class, 'EmpresaUpdate']);
-
 require __DIR__.'/auth.php';
