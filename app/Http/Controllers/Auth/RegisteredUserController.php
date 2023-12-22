@@ -56,23 +56,32 @@ class RegisteredUserController extends Controller
         return redirect(RouteServiceProvider::HOME);
     }
     
-    public function empresaUpdate(Request $request, Empresa $empresa): RedirectResponse
+    public function empresaUpdate(Request $request, Empresa $empresa)
     {
         $data = $request->validate([
-            'razon_social' => 'string|max:255',
-            'metodo_generacion_empleados' => 'string|max:255',
-            'imagen' => 'string|max:255',
+            'razon_social' => 'nullable|string|max:255',
+            'rfc' => 'nullable|string|max:255',
+            'metodo_generacion_empleados' => 'nullable|string|max:255',
+            'imagen' => 'nullable|string|max:255',
         ]);
         
-        // empresa
-        $empresa->razon_social=$data['razon_social'];
-        $empresa->metodo_generacion_empleados=$data['metodo_generacion_empleados'];
-        $empresa->imagen=$data['imagen'];
-    
+        if (isset($data['razon_social'])) {
+            $empresa->razon_social = $data['razon_social'];
+        }
+        if (isset($data['rfc'])) {
+            $empresa->rfc = $data['rfc'];
+        }
+        if (isset($data['metodo_generacion_empleados'])) {
+            $empresa->metodo_generacion_empleados = $data['metodo_generacion_empleados'];
+        }
+        if (isset($data['imagen'])) {
+            $empresa->imagen = $data['imagen'];
+        }
+        
         if($empresa->save()){
             return response([
                 'status' => true,
-                '$empresa'=>$empresa
+                'empresa'=> $empresa
             ]);
         }else{
             return response([
@@ -83,13 +92,11 @@ class RegisteredUserController extends Controller
         
     }
     
-    
     public function setAdmin(Request $request, User $user)
     {  
         $data = $request->validate([
         ]);
-     
-        // usuario
+   
         $user->nombres = 'administrador';
         $user->admin = '1';
         $user->fecha_ingreso = Carbon::now()->format('Y-m-d H:i:s');
